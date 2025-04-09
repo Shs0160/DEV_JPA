@@ -1,10 +1,8 @@
-package io.shs0160.springjpa.dao;
+package io.shs0160.springjpa.transaction.inner;
 
+import io.shs0160.springjpa.dao.SimpleCrudRepository;
 import io.shs0160.springjpa.member.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.convert.DataSizeUnit;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 
 import javax.sql.DataSource;
@@ -12,7 +10,7 @@ import java.sql.*;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class SimpleJdbcCrudRepository implements SimpleCrudRepository {
+public class SimpleJdbcCrudTransactionRepository implements SimpleCrudRepository {
 
     private final DataSource dataSource;
 
@@ -23,7 +21,7 @@ public class SimpleJdbcCrudRepository implements SimpleCrudRepository {
     private void closeConnection(Connection connection, Statement statement, ResultSet resultSet) {
         JdbcUtils.closeResultSet(resultSet);
         JdbcUtils.closeStatement(statement);
-        DataSourceUtils.releaseConnection(connection, dataSource);
+        JdbcUtils.closeConnection(connection);
     }
 
     @Override
